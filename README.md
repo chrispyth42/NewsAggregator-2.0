@@ -1,0 +1,1 @@
+# NewsAggregator-2.0
