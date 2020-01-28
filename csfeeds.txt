@@ -1,0 +1,6 @@
+https://www.darkreading.com/rss_simple.asp?f_n=644&f_ln=Attacks/Breaches
+https://www.ponemon.org/library/rss
+https://www.darkreading.com/rss_simple.asp?f_n=661&f_ln=Vulnerabilities%20/%20Threats
+https://www.cuinfosecurity.com/rssFeeds.php?type=main
+https://feeds.feedburner.com/homelandsecuritynewswire/rss?format=xml
+http://www.infosecisland.com/rss.html

@@ -1,0 +1,48 @@
+html {
+    margin: 0;
+}
+
+body {
+    background-image: url("http://clientpi.chris.local/img/ss.jpg");
+    background-position-x: 50%;
+    background-position-y: 40%;
+    background-attachment: fixed;
+    margin: 0;
+}
+
+h1,h2 {
+    color: white;
+    margin:5px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+h3{
+    color: rgb(214, 213, 148);
+    font-style: italic;
+}
+
+.main {
+    margin-left: 10%;
+    margin-right: 10%;
+    width: 80%;
+    height: 100%;
+    background-color: rgba(202, 202, 202, 0.2);
+    position: relative;
+    text-align: center;
+}
+
+.station {
+    text-align: left;
+    background-color: rgba(55, 134, 128, 0.5);
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+p {
+    margin: 0px;
+    color: white;
+}
+
+a {
+    color: lightblue;
+}
