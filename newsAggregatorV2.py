@@ -1,3 +1,4 @@
+#!/usr/bin/python3.6
 #Getting and parsing the data
 import lxml.etree as et
 import requests
@@ -9,9 +10,14 @@ import re
 #For getting the current time
 import datetime
 
+#Settings variables
+storyLimit = 10                 #Amount of most recent news stories to display per source
+inFile = 'csfeeds.txt'          #Input text file of RSS feed URLs (1 url per line)
+dbFile = 'feedDatabase.sqlite'  #Output database file for news data
+siteFile = 'site/index.html'    #Output html file to output data to
 
 #Initialize the database and its tables if they don't exist
-db = sqlite3.connect('feedDatabase.sqlite')
+db = sqlite3.connect(dbFile)
 c = db.cursor()
 
 #Database schema
@@ -176,9 +182,9 @@ def writeFeed(data):
         print(f"{data[0]['title']}: +{newArticles}")
 
 #Reads from the database, and outputs to an HTML to be used on the webpage
-def writeSite(dbpath):
+def writeSite():
 
-    #Header and Footer of html document
+    #HTML document, starting with the header
     document = """
     <!DOCTYPE html>
     <html lang="en">
@@ -205,14 +211,16 @@ def writeSite(dbpath):
         #Add beginning of source div
         document += f"""
             <div class="station">
-            <h2>{source}</h2>"""
+            <a href="#" onclick="return togglePageElementVisibility('station-{source}')"><h2>{source}</h2></a>
+            <div id="station-{source}" style="display: none">
+            """
     
-        #Get 5 most recent stories for the source
+        #Get most recent stories for the source
         c.execute(f"""
             SELECT title,getDate,description,link FROM Articles 
             WHERE source='{source}' 
             ORDER BY getDate DESC
-            LIMIT 5""")
+            LIMIT {storyLimit}""")
         stories = c.fetchall()
 
         #Add to the document for each story
@@ -226,30 +234,42 @@ def writeSite(dbpath):
             </div>"""
 
         #Close the news source div and add a page break
-        document += "</div><br>"
+        document += "</div></div><br>"
 
-    #Close the document
-    document += "</div></body></html>"
+    #Close the body
+    document += "</div></body>"
+    
+    #Include script reference
+    document += """
+    <script src="showhide.js"></script>
+    </html>"""
 
     #Write the completed document
-    fp = open("site/index.html",'w')
+    fp = open(siteFile,'w')
     fp.write(document)
     fp.close()
 
 #Main function
 def main():
-    sources = open('csfeeds.txt','r')
+    #Open RSS feed input file
+    sources = open(inFile,'r')
+
+    #For each URL, get the RSS data and add it to the database
     for source in sources:
         source = source.strip()
-        data = rssGet(source)
-        writeFeed(data)
+        #Skip lines that are only whitespace
+        if source:
+            data = rssGet(source)
+            writeFeed(data)
+    
+    #Close input file
     sources.close()
 
-#Run main function
-main()
-writeSite(1)
+    #Read the database, and output the news stories in an easy to read HTML format
+    writeSite()
 
-#Save and close the db
+#Run main function, then save and close the DB
+main()
 db.commit()
 db.close()
 
